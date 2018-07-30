@@ -1,7 +1,7 @@
-class PersonTest(val firstName: String, val lastName: String) {
+class PersonNullableTest(val firstName: String, val lastName: String) {
     override fun equals(o: Any?): Boolean {
         // Safe casts as? to perform a safe conversion
-        val otherPerson = o as? PersonTest ?: return false
+        val otherPerson = o as? PersonNullableTest ?: return false
 
         return otherPerson.firstName == firstName &&
                 otherPerson.lastName == lastName
@@ -68,18 +68,7 @@ class MyTest {
 // In kotlin it's possible to chain a lot of safe call operations, for instance:
 // person?.address?.street
 
-fun main(args: Array<String>) {
-    println(strLenSafe(null))
-    println(strLenSafeUsingSafeCallOperator(null))
-    println(strLenSafeUsingSafeCallOperatorAndElvisOperator(null))
-    //println(strLenSafeUsingSafeCallOperatorAndElvisOperatorThrowingException(null))
-    println(ignoreNulls("Test"))
-    //println(ignoreNulls(null))
-    var email: String? = "Test"
-    email?.let { sendEmailTo(it) }
-    email = null
-    email?.let { sendEmailTo(it) }
-}
+
 
 // Any type, include a nullable type, can be substituted for a type parameter, so you should
 // use safe char ?
@@ -175,6 +164,18 @@ fun collectionOfNullableValues(listOfInteg: List<String>?) : List<Int?>{
 // When we implement some java interface, we can define if we will use null or non null types
 
 fun main(args: Array<String>) {
+
+    println(strLenSafe(null))
+    println(strLenSafeUsingSafeCallOperator(null))
+    println(strLenSafeUsingSafeCallOperatorAndElvisOperator(null))
+    //println(strLenSafeUsingSafeCallOperatorAndElvisOperatorThrowingException(null))
+    println(ignoreNulls("Test"))
+    //println(ignoreNulls(null))
+    var email: String? = "Test"
+    email?.let { sendEmailTo(it) }
+    email = null
+    email?.let { sendEmailTo(it) }
+
     printHashCode(null)
     printNonNullHashCode("Test")
     testPrimitiveTypes(5, null)

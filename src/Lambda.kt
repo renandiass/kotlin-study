@@ -1,7 +1,7 @@
 /**
  * Created by renan on 7/17/18.
  */
-data class Person(val name:String, val age: Int)
+data class PersonLambda(val name:String, val age: Int)
 
 fun salute() = println("Salute !!!")
 
@@ -74,18 +74,26 @@ fun printMessagesWithPrefix(messages: Collection<String>, prefix: String) {
 }
 
 fun main(args: Array<String>) {
-    val people = listOf(Person("Alice", 29), Person("Bob", 32), Person("Carol", 29), Person("George", 44), Person("Alfred", 32))
+    val people = listOf(PersonLambda("Alice", 29), PersonLambda("Bob", 32), PersonLambda("Carol", 29), PersonLambda("George", 44), PersonLambda("Alfred", 32))
+
+    println(listOf(1, 2, 3, 4).map { it * 2 }.find { it > 4 })
+    println(listOf(1, 2, 3, 4).asSequence().map { it * 2 }.find { it > 4 })
+
+    //Do the same
+    println(people.maxBy { it.age })
+    println(people.maxBy(PersonLambda::age))
+    println(people.maxBy {p: PersonLambda -> p.age})
 
     // It's possible to store a lambda in a variable
-    val getAge = {p: Person -> p.age}
+    val getAge = {p: PersonLambda -> p.age}
     // To simplify the lambda it's possible to use the syntax of member reference
-    val getAgeMemberRefernce = Person::age
+    val getAgeMemberRefernce = PersonLambda::age
 
     // in this case I'm calling a top level function and I can omit the name of the class
     run(::salute)
 
     // It's possible to store a constructor reference inside a variable
-    val createPerson = ::Person
+    val createPerson = ::PersonLambda
     val p = createPerson("George", 40)
 
     // it's possible to create a function based on references, it's called bound references
@@ -106,12 +114,12 @@ fun main(args: Array<String>) {
     println(people.groupBy { it.age })
 
     // Evaluates the list eagerly, the intermediate result of each step is stored in a temporary list
-    println(people.map(Person::name).filter { it.startsWith("A") })
+    println(people.map(PersonLambda::name).filter { it.startsWith("A") })
 
     // In this example, no intermediate collections will be created, similar with streams in java,
     // for sequences all operations are applied to each element sequentially, the first element is processed(
     // mapped, then filtered), then the second element, and so on
-    println(people.asSequence().map(Person::name).filter { it.startsWith("A") }.toList())
+    println(people.asSequence().map(PersonLambda::name).filter { it.startsWith("A") }.toList())
 
     // Eager / map = Collection (1, 4, 9, 18) -> filter (not 1), (yes 4), return 4
     println(listOf(1, 2, 3, 4).map { it * it }.find { it > 3 })
