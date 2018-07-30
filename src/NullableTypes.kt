@@ -1,3 +1,86 @@
+class PersonTest(val firstName: String, val lastName: String) {
+    override fun equals(o: Any?): Boolean {
+        // Safe casts as? to perform a safe conversion
+        val otherPerson = o as? PersonTest ?: return false
+
+        return otherPerson.firstName == firstName &&
+                otherPerson.lastName == lastName
+    }
+
+    override fun hashCode(): Int {
+        return firstName.hashCode() * 37 + lastName.hashCode()
+    }
+}
+
+// All regular types are non-null by default, to accept null it's necessary to use
+// ? (question mark) after any type
+//fun strLenSafe(s: String?) = s.length it's not possible to do this call or to
+// pass null variable to a not null variable, both cases will result in a compile error
+// To work it's necessary to check whether it's different from null or not
+fun strLenSafe(s: String?) = if(s != null) s.length else 0
+
+// In this case if s is null this code will return null
+fun strLenSafeUsingSafeCallOperator(s: String?) = s?.length
+
+// Using "Elvis operator" it's possible to return a default value when the variable was null
+fun strLenSafeUsingSafeCallOperatorAndElvisOperator(s: String?) = s?.length ?: 0
+
+// Elvis operator throwing exception
+fun strLenSafeUsingSafeCallOperatorAndElvisOperatorThrowingException(s: String?) = s?.length ?: throw IllegalArgumentException("Nullable Variable")
+
+// Not null assertion, converts any value to a non null type, for instance !!foo, if foo != null = foo, if foo == null
+// throws a NullPointerException
+fun ignoreNulls(s: String?) {
+    val sNotNull: String = s!!
+    println(sNotNull.length)
+}
+
+// The let function makes it easier to deal with nullable expression, this function receives a non null String, so
+// it's not possible to call this function passing a nullable type val email: String? = ..... and sendEmailTo(email)
+// this code throw a type mismatch Error
+fun sendEmailTo(email: String) {
+    println("Send email to $email")
+}
+
+// Extension function for a nullable type, it means you can call this function on nullable values
+fun String?.checkIsNullOrBlank(): Boolean = this == null || this.isBlank()
+
+// To deal with null it's possible to create nullable receivers
+fun verifyUserInput(s: String?) {
+    // No safe call is needed
+    if(s.isNullOrBlank()) {
+        println("Please fill with a non null variable")
+    }
+}
+
+class MyTest {
+    // In kotlin it's not possible to create a non null property and not initialize it in initialization time
+    // private var test: String
+    // To do that you have to use late initialization, but the property should be a var, val it's compile as
+    // final attributes and should be initialized inside the constructor
+    private lateinit var test: String
+
+    fun setUp() {
+        test = "Test"
+    }
+}
+
+// In kotlin it's possible to chain a lot of safe call operations, for instance:
+// person?.address?.street
+
+fun main(args: Array<String>) {
+    println(strLenSafe(null))
+    println(strLenSafeUsingSafeCallOperator(null))
+    println(strLenSafeUsingSafeCallOperatorAndElvisOperator(null))
+    //println(strLenSafeUsingSafeCallOperatorAndElvisOperatorThrowingException(null))
+    println(ignoreNulls("Test"))
+    //println(ignoreNulls(null))
+    var email: String? = "Test"
+    email?.let { sendEmailTo(it) }
+    email = null
+    email?.let { sendEmailTo(it) }
+}
+
 // Any type, include a nullable type, can be substituted for a type parameter, so you should
 // use safe char ?
 fun <T> printHashCode(t: T) {
